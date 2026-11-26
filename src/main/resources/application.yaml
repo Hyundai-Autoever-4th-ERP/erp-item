@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: erp-item
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:${POSTGRES_PORT:15432}/item_db}
+    username: ${SPRING_DATASOURCE_USERNAME:item_app}
+    password: ${SPRING_DATASOURCE_PASSWORD:item_local}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+server:
+  port: ${SERVER_PORT:8082}
