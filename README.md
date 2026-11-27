@@ -52,3 +52,17 @@ Auth 구현과 독립적으로 검증하려면 로컬 DB를 켠 뒤 아래 테�
 ```sh
 ./gradlew test --tests '*ItemApiIntegrationTest'
 ```
+
+### Auth 구현 전 Swagger에서 직접 호출하기
+
+1. Node.js 18 이상에서 `node scripts/local-swagger-auth.mjs`를 실행하고 터미널을 열어 둡니다. 읽기·쓰기용 `HQ_STAFF`와 조회용 `BRANCH_STAFF` 토큰이 출력됩니다.
+2. 로컬 DB가 켜진 상태에서 Item을 아래 환경변수로 시작합니다. IntelliJ로 실행 중이면 실행 구성의 환경변수에 같은 값을 넣고 재시작합니다.
+
+   ```sh
+   AUTH_JWKS_URI=http://127.0.0.1:18081/internal/auth/jwks ./gradlew bootRun
+   ```
+
+3. [Swagger UI](http://localhost:8082/swagger-ui/index.html)에서 **Authorize**를 누르고 역할 아래의 토큰 문자열만 붙여 넣습니다. Swagger가 `Bearer`를 붙입니다.
+4. `GET /api/v1/items`는 두 역할 모두 200입니다. `BRANCH_STAFF`로 등록을 호출하면 403이고, Authorize 창에서 Logout 후 조회하면 401입니다.
+
+토큰은 1시간 동안 유효합니다. 새 토큰이 필요하면 발급 스크립트와 Item을 함께 재시작하세요. 매번 새 키를 생성하므로 Item의 공개키 캐시도 갱신해야 합니다. Auth 연동으로 돌아갈 때는 환경변수를 지우고 Item을 재시작하세요.
