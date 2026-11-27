@@ -1,6 +1,15 @@
 spring:
   application:
     name: erp-item
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${AUTH_JWKS_URI:http://localhost:8081/internal/auth/jwks}
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+      accept-float-as-int: false
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:${POSTGRES_PORT:15432}/item_db}
     username: ${SPRING_DATASOURCE_USERNAME:item_app}
